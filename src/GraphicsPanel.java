@@ -1,19 +1,25 @@
 import javax.swing.*;
 import java.awt.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
+import java.util.TimerTask;
 
-public class GraphicsPanel extends JFrame {
+public class GraphicsPanel extends JPanel {
     Point red;
     Point green;
     private Track _t;
     public GraphicsPanel(Track t) {
         _t = t;
-        setTitle("Magnet Track");
+        JFrame frame = new JFrame();
+        frame.setTitle("Magnet Track");
+        frame.setSize(800, 800);
+        frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        frame.add(this, BorderLayout.CENTER);
         setSize(800, 800);
-        setVisible(true);
-        setDefaultCloseOperation(EXIT_ON_CLOSE);
-        setBackground(Color.WHITE);
+        frame.setBackground(Color.WHITE);
+        frame.setVisible(true);
 
         addMouseListener(new MouseListener() {
             @Override
@@ -42,26 +48,19 @@ public class GraphicsPanel extends JFrame {
             }
         });
 
-        new Thread(() -> {
-            for (int i = 0; i < 10000 /*10000 = 5 min */; i++) {
-                _t.moveCar(0.07);
-                try {
-                    Thread.sleep(30);
-                } catch (InterruptedException e) {
-                    e.printStackTrace();
-                }
-                repaint();
-            }
+        new Timer(40, e -> {
+            _t.moveCar(0.07);
+            repaint();
         }).start();
     }
 
     @Override
-    public void paint(Graphics g1) {
+    public void paintComponent(Graphics g1) {
         Graphics2D g = (Graphics2D) g1;
 
         if (red != null) {
             g.setColor(Color.WHITE);
-            g.setStroke(new BasicStroke(25, BasicStroke.CAP_ROUND, BasicStroke.JOIN_ROUND, 10));
+            g.setStroke(new BasicStroke(27, BasicStroke.CAP_ROUND, BasicStroke.JOIN_ROUND, 10));
             g.drawLine(red.x, red.y, red.x, red.y);
             g.drawLine(green.x, green.y, green.x, green.y);
         }
