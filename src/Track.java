@@ -46,12 +46,12 @@ public class Track {
 
     private void updateMagnetPosition() {
         DoublePoint car = _car.getPosition();
-        DoublePoint magnet = _magnet.getPosition();
-        Vector magnetToCar = new Vector(car.getX()-magnet.getX(), car.getY()-magnet.getY());
+
         int indexZ = (_magnet.getSegmentIndex()+_points.size()-1)%_points.size();
         int indexA = _magnet.getSegmentIndex();
         int indexB = (_magnet.getSegmentIndex()+1)%_points.size();
         int indexC = (_magnet.getSegmentIndex()+2)%_points.size();
+
         DoublePoint Z = _points.get(indexZ);
         DoublePoint A = _points.get(indexA);
         DoublePoint B = _points.get(indexB);

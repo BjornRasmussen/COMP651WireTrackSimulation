@@ -41,9 +41,9 @@ public class GraphicsPanel extends JFrame {
 
         new Thread(() -> {
             for (int i = 0; i < 10000 /*10000 = 5 min */; i++) {
-                _t.moveCar(0.1);
+                _t.moveCar(0.015);
                 try {
-                    Thread.sleep(30);
+                    Thread.sleep(40);
                 } catch (InterruptedException e) {
                     e.printStackTrace();
                 }
@@ -56,14 +56,20 @@ public class GraphicsPanel extends JFrame {
     public void paint(Graphics g1) {
         super.paintComponents(g1);
         Graphics2D g = (Graphics2D) g1;
-        g.setStroke(new BasicStroke(4));
-        g.setColor(new Color(13, 130, 202));
+        g.setStroke(new BasicStroke(4, BasicStroke.CAP_ROUND, BasicStroke.JOIN_ROUND, 10));
+        g.setColor(new Color(40, 170, 242));
+        int[] xArray = new int[_t.getPoints().size()+1];
+        int[] yArray = new int[_t.getPoints().size()+1];
+
         for (int i = 0; i < _t.getPoints().size(); i++) {
             Point A = convertCoords(_t.getPoints().get(i));
-            Point B = convertCoords(_t.getPoints().get((i+1)%_t.getPoints().size()));
-            g.drawLine(A.x, A.y, B.x, B.y);
+            xArray[i] = A.x;
+            yArray[i] = A.y;
         }
-        g.setStroke(new BasicStroke(15, BasicStroke.CAP_ROUND, BasicStroke.JOIN_MITER, 10));
+        xArray[xArray.length-1] = xArray[0];
+        yArray[yArray.length-1] = yArray[0];
+        g.drawPolyline(xArray, yArray, xArray.length);
+        g.setStroke(new BasicStroke(15, BasicStroke.CAP_ROUND, BasicStroke.JOIN_ROUND, 10));
         g.setColor(Color.RED);
         DoublePoint magnet = _t.getMagnetPos();
         Point mp = convertCoords(magnet);
@@ -78,13 +84,13 @@ public class GraphicsPanel extends JFrame {
 
     private static Point convertCoords(DoublePoint p) {
         // DUAL RENDERING CODE:
-        // is 5 in 1, 1 dir, at 4, -4
-        DoublePoint dp = new DoublePoint(4, 0);
-        double r = 3;
-        double dist = p.dist(dp);
-        double dir = dp.ang(p);
-        p = dp.goInDirection(dir, r*r/dist);
-        // END DUAL RENDERING CODE
+//        // is 5 in 1, 1 dir, at 4, -4
+//        DoublePoint dp = new DoublePoint(4, 0);
+//        double r = 3;
+//        double dist = p.dist(dp);
+//        double dir = dp.ang(p);
+//        p = dp.goInDirection(dir, r*r/dist);
+//        // END DUAL RENDERING CODE
         int x = (int) (p.getX()*50 + 400.5);
         int y = (int) (p.getY()*-50 + 400.5);
         return new Point(x, y);
