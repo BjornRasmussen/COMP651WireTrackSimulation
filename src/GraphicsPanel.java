@@ -48,8 +48,8 @@ public class GraphicsPanel extends JPanel {
             }
         });
 
-        new Timer(40, e -> {
-            _t.moveCar(0.07);
+        new Timer(25, e -> {
+            _t.moveCar(0.03);
             repaint();
         }).start();
     }
