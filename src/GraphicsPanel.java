@@ -1,5 +1,7 @@
 import javax.swing.*;
 import java.awt.*;
+import java.awt.event.KeyEvent;
+import java.awt.event.KeyListener;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 
@@ -15,52 +17,77 @@ public class GraphicsPanel extends JPanel {
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         frame.add(this, BorderLayout.CENTER);
         setSize(800, 800);
+        frame.add(new JLabel("Arrow keys to move, Ctrl+Arrow keys to move fast."), BorderLayout.BEFORE_FIRST_LINE);
         frame.setBackground(Color.WHITE);
+        setBackground(Color.WHITE);
         frame.setVisible(true);
-
-        addMouseListener(new MouseListener() {
+        final boolean[] dir = {false, false, false, false};
+        frame.addKeyListener(new KeyListener() {
             @Override
-            public void mouseClicked(MouseEvent e) {
-                _t.moveCar(0.5);
-            }
-
-            @Override
-            public void mousePressed(MouseEvent e) {
+            public void keyTyped(KeyEvent e) {
 
             }
 
             @Override
-            public void mouseReleased(MouseEvent e) {
-
+            public void keyPressed(KeyEvent e) {
+                int keyCode = e.getKeyCode();
+                switch (keyCode) {
+                    case KeyEvent.VK_LEFT -> {
+                        // Handle left:
+                        dir[0] = true;
+                        dir[2] = false;
+                    }
+                    case KeyEvent.VK_RIGHT -> {
+                        // Handle right:
+                        dir[1] = true;
+                        dir[2] = true;
+                    }
+                    case KeyEvent.VK_CONTROL -> {
+                        // Speed it up:
+                        dir[3] = true;
+                    }
+                }
             }
 
             @Override
-            public void mouseEntered(MouseEvent e) {
-
-            }
-
-            @Override
-            public void mouseExited(MouseEvent e) {
-
+            public void keyReleased(KeyEvent e) {
+                int keyCode = e.getKeyCode();
+                switch (keyCode) {
+                    case KeyEvent.VK_LEFT -> {
+                        // handle left
+                        dir[0] = false;
+                    }
+                    case KeyEvent.VK_RIGHT -> {
+                        // handle right
+                        dir[1] = false;
+                    }
+                    case KeyEvent.VK_CONTROL -> {
+                        // Slow it down:
+                        dir[3] = false;
+                    }
+                }
             }
         });
 
         new Timer(17, e -> {
-            _t.moveCar(0.1);
+            double dist = dir[2] ? (dir[1] ? 0.05 : dir[0] ? -0.05 : 0.0) : (dir[0] ? -0.05 : dir[1] ? 0.05 : 0.0);
+            dist *= dir[3] ? 3 : 1;
+            _t.moveCar(dist);
             repaint();
         }).start();
     }
 
     @Override
     public void paintComponent(Graphics g1) {
+        super.paintComponent(g1);
         Graphics2D g = (Graphics2D) g1;
         g.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
-        if (red != null) {
-            g.setColor(Color.WHITE);
-            g.setStroke(new BasicStroke(27, BasicStroke.CAP_ROUND, BasicStroke.JOIN_ROUND, 10));
-            g.drawLine(red.x, red.y, red.x, red.y);
-            g.drawLine(green.x, green.y, green.x, green.y);
-        }
+//        if (red != null) {
+//            g.setColor(Color.WHITE);
+//            g.setStroke(new BasicStroke(27, BasicStroke.CAP_ROUND, BasicStroke.JOIN_ROUND, 10));
+//            g.drawLine(red.x, red.y, red.x, red.y);
+//            g.drawLine(green.x, green.y, green.x, green.y);
+//        }
 
         g.setStroke(new BasicStroke(4, BasicStroke.CAP_ROUND, BasicStroke.JOIN_ROUND, 10));
         g.setColor(new Color(40, 170, 242));
