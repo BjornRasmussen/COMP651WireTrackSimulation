@@ -17,13 +17,13 @@ public class main {
 //            points.add(new DoublePoint(distbig*Math.sin(angleFromTop+ang3), distbig*Math.cos(angleFromTop+ang3)));
 //            points.add(new DoublePoint(distsmall*Math.sin(angleFromTop+ang4), distsmall*Math.cos(angleFromTop+ang4)));
 //        }
-        for (int i = 0; i < 2000; i++) {
-            double ang = i*Math.PI/1000;
-            double dist = 5+1*Math.sin(ang*15);
+        for (int i = 0; i < 1000; i++) {
+            double ang = i*Math.PI/500;
+            double dist = 5+1.5*Math.cos(ang*15);
             points.add(new DoublePoint(dist*Math.sin(ang), dist*Math.cos(ang)));
         }
         GliderPosition magnet = new GliderPosition(0, 0.5);
-        GliderPosition car = new GliderPosition(60, 0.5);
+        GliderPosition car = new GliderPosition(59, 0.5);
 
         Track t = new Track(points, car, magnet);
         new GraphicsPanel(t);

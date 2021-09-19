@@ -48,8 +48,8 @@ public class GraphicsPanel extends JPanel {
             }
         });
 
-        new Timer(25, e -> {
-            _t.moveCar(0.03);
+        new Timer(10, e -> {
+            _t.moveCar(0.04);
             repaint();
         }).start();
     }
@@ -57,7 +57,7 @@ public class GraphicsPanel extends JPanel {
     @Override
     public void paintComponent(Graphics g1) {
         Graphics2D g = (Graphics2D) g1;
-
+        g.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
         if (red != null) {
             g.setColor(Color.WHITE);
             g.setStroke(new BasicStroke(27, BasicStroke.CAP_ROUND, BasicStroke.JOIN_ROUND, 10));

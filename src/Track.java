@@ -108,6 +108,7 @@ public class Track {
             }
         }
 
+        // Hasn't finished, keep moving magnet:
         updateMagnetPosition();
     }
 
