@@ -17,16 +17,14 @@ public class GraphicsPanel extends JPanel {
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         frame.add(this, BorderLayout.CENTER);
         setSize(800, 800);
-        frame.add(new JLabel("Arrow keys to move, Ctrl+Arrow keys to move fast."), BorderLayout.BEFORE_FIRST_LINE);
+        frame.add(new JLabel("Arrow keys to move, Ctrl+Arrow keys to move fast, R to restart."), BorderLayout.BEFORE_FIRST_LINE);
         frame.setBackground(Color.WHITE);
         setBackground(Color.WHITE);
         frame.setVisible(true);
         final boolean[] dir = {false, false, false, false};
         frame.addKeyListener(new KeyListener() {
             @Override
-            public void keyTyped(KeyEvent e) {
-
-            }
+            public void keyTyped(KeyEvent e) {}
 
             @Override
             public void keyPressed(KeyEvent e) {
@@ -45,6 +43,9 @@ public class GraphicsPanel extends JPanel {
                     case KeyEvent.VK_CONTROL -> {
                         // Speed it up:
                         dir[3] = true;
+                    }
+                    case KeyEvent.VK_R -> {
+                        _t.restart();
                     }
                 }
             }

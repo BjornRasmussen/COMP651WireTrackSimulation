@@ -4,13 +4,19 @@ public class Track {
     private List<DPoint> _points; // Assume last point connects to first.
     private GliderPosition _car;
     private GliderPosition _magnet;
+    private final GliderPosition _carInit;
+    private final GliderPosition _magnetInit;
 
     public Track(List<DPoint> points, GliderPosition car, GliderPosition magnet) {
         _points = points;
         _car = car;
         _car.setTrack(this);
+        _carInit = new GliderPosition(_car.getSegmentIndex(), _car.getWayThrough());
+        _carInit.setTrack(this);
         _magnet = magnet;
         _magnet.setTrack(this);
+        _magnetInit = new GliderPosition(_magnet.getSegmentIndex(), _magnet.getWayThrough());
+        _magnetInit.setTrack(this);
     }
 
     public List<DPoint> getPoints() {
@@ -137,6 +143,11 @@ public class Track {
 
     public DPoint getMagnetPos() {
         return _magnet.getPosition();
+    }
+
+    public void restart() {
+        _car.setPosition(_carInit.getSegmentIndex(), _carInit.getWayThrough());
+        _magnet.setPosition(_magnetInit.getSegmentIndex(), _magnetInit.getWayThrough());
     }
 }
 

@@ -19,11 +19,11 @@ public class Main {
 //        }
         for (int i = 0; i < 1000; i++) {
             double ang = i*Math.PI/500;
-            double dist = 5+1.1*Math.cos(ang*15);
+            double dist = 5+Math.cos(ang*15);
             points.add(new DPoint(dist*Math.sin(ang), dist*Math.cos(ang)));
         }
         GliderPosition magnet = new GliderPosition(0, 0.5);
-        GliderPosition car = new GliderPosition(150, 0.5);
+        GliderPosition car = new GliderPosition(250, 0.5);
 
         Track t = new Track(points, car, magnet);
         new GraphicsPanel(t);
