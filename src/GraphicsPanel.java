@@ -1,10 +1,7 @@
 import javax.swing.*;
 import java.awt.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
-import java.util.TimerTask;
 
 public class GraphicsPanel extends JPanel {
     Point red;
@@ -80,13 +77,13 @@ public class GraphicsPanel extends JPanel {
         g.drawPolyline(xArray, yArray, xArray.length);
         g.setStroke(new BasicStroke(25, BasicStroke.CAP_ROUND, BasicStroke.JOIN_ROUND, 10));
         g.setColor(Color.RED);
-        DoublePoint magnet = _t.getMagnetPos();
+        DPoint magnet = _t.getMagnetPos();
         Point mp = convertCoords(magnet);
         g.drawLine(mp.x, mp.y, mp.x, mp.y);
 
         g.setStroke(new BasicStroke(23, BasicStroke.CAP_ROUND, BasicStroke.JOIN_MITER, 10));
         g.setColor(Color.GREEN);
-        DoublePoint car = _t.getCarPos();
+        DPoint car = _t.getCarPos();
         Point cp = convertCoords(car);
         g.drawLine(cp.x, cp.y, cp.x, cp.y);
 
@@ -94,7 +91,7 @@ public class GraphicsPanel extends JPanel {
         green = cp;
     }
 
-    private static Point convertCoords(DoublePoint p) {
+    private static Point convertCoords(DPoint p) {
         // DUAL RENDERING CODE:
 //        // is 5 in 1, 1 dir, at 4, -4
 //        DoublePoint dp = new DoublePoint(4, 0);

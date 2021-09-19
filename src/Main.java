@@ -1,9 +1,9 @@
 import java.util.ArrayList;
 import java.util.List;
 
-public class main {
+public class Main {
     public static void main(String[] args) {
-        List<DoublePoint> points = new ArrayList<>();
+        List<DPoint> points = new ArrayList<>();
 //        for (int i = 0; i < 10; i++) {
 //            double angleFromTop = i*Math.PI/5;
 //            double distsmall = 5;
@@ -20,7 +20,7 @@ public class main {
         for (int i = 0; i < 1000; i++) {
             double ang = i*Math.PI/500;
             double dist = 5+1.5*Math.cos(ang*15);
-            points.add(new DoublePoint(dist*Math.sin(ang), dist*Math.cos(ang)));
+            points.add(new DPoint(dist*Math.sin(ang), dist*Math.cos(ang)));
         }
         GliderPosition magnet = new GliderPosition(0, 0.5);
         GliderPosition car = new GliderPosition(59, 0.5);

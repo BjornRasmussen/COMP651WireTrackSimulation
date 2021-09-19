@@ -1,11 +1,11 @@
 import java.util.List;
 
 public class Track {
-    private List<DoublePoint> _points; // Assume last point connects to first.
+    private List<DPoint> _points; // Assume last point connects to first.
     private GliderPosition _car;
     private GliderPosition _magnet;
 
-    public Track(List<DoublePoint> points, GliderPosition car, GliderPosition magnet) {
+    public Track(List<DPoint> points, GliderPosition car, GliderPosition magnet) {
         _points = points;
         _car = car;
         _car.setTrack(this);
@@ -13,7 +13,7 @@ public class Track {
         _magnet.setTrack(this);
     }
 
-    public List<DoublePoint> getPoints() {
+    public List<DPoint> getPoints() {
         return _points;
     }
 
@@ -25,37 +25,38 @@ public class Track {
         int indexB = (_car.getSegmentIndex()+1)%_points.size();
         int indexC = (_car.getSegmentIndex()+2)%_points.size();
 
-        DoublePoint Z = _points.get(indexZ);
-        DoublePoint A = _points.get(indexA);
-        DoublePoint B = _points.get(indexB);
-        DoublePoint C = _points.get(indexC);
+        DPoint Z = _points.get(indexZ);
+        DPoint A = _points.get(indexA);
+        DPoint B = _points.get(indexB);
+        DPoint C = _points.get(indexC);
 
         if (_car.getWayThrough() < 0.01/A.dist(B) && dist < 0) {
             // Car is at start node and will be moving backwards to other line segment:
-            _car.updatePosition(indexZ, trim(1+(dist/Z.dist(A)), 0, 1));
+            _car.setPosition(indexZ, trim(1+(dist/Z.dist(A)), 0, 1));
         } else if (_car.getWayThrough() > (1-0.01/A.dist(B)) && dist > 0) {
             // Car is at end node and will be moving forwards to next line segment:
-            _car.updatePosition(indexB, trim(dist/B.dist(C), 0, 1));
+            _car.setPosition(indexB, trim(dist/B.dist(C), 0, 1));
         } else {
             // Car will stay on AB
-            _car.updatePosition(indexA, trim(_car.getWayThrough()+(dist/A.dist(B)), 0, 1));
+            _car.setPosition(indexA, trim(_car.getWayThrough()+(dist/A.dist(B)), 0, 1));
         }
 
-        updateMagnetPosition();
+        updateMagnetPosition(0);
     }
 
-    private void updateMagnetPosition() {
-        DoublePoint car = _car.getPosition();
+    private void updateMagnetPosition(int num) {
+        if (num > 3) return; // REMOVE THIS LINE TO MAKE THE MAGNET INFINITELY FAST
+        DPoint car = _car.getPosition();
 
         int indexZ = (_magnet.getSegmentIndex()+_points.size()-1)%_points.size();
         int indexA = _magnet.getSegmentIndex();
         int indexB = (_magnet.getSegmentIndex()+1)%_points.size();
         int indexC = (_magnet.getSegmentIndex()+2)%_points.size();
 
-        DoublePoint Z = _points.get(indexZ);
-        DoublePoint A = _points.get(indexA);
-        DoublePoint B = _points.get(indexB);
-        DoublePoint C = _points.get(indexC);
+        DPoint Z = _points.get(indexZ);
+        DPoint A = _points.get(indexA);
+        DPoint B = _points.get(indexB);
+        DPoint C = _points.get(indexC);
 
         double prevProjectedWayThrough = getProjectedWayThrough(Z, A, car);
         double projectedWayThrough = getProjectedWayThrough(A, B, car);
@@ -68,14 +69,14 @@ public class Track {
             } else if (1-prevProjectedWayThrough > projectedWayThrough) {
                 // Prev is better angle to travel along:
                 double spotTrimmed = trim(prevProjectedWayThrough, 0, 1);
-                _magnet.updatePosition(indexZ, spotTrimmed);
+                _magnet.setPosition(indexZ, spotTrimmed);
                 if (spotTrimmed == prevProjectedWayThrough) {
                     return; // magnet is now at its final resting place.
                 }
             } else {
                 // Current is better angle to travel along:
                 double spotTrimmed = trim(projectedWayThrough, 0, 1);
-                _magnet.updatePosition(indexA, spotTrimmed);
+                _magnet.setPosition(indexA, spotTrimmed);
                 if (spotTrimmed == projectedWayThrough) {
                     return; // magnet is now at its final resting place.
                 }
@@ -87,14 +88,14 @@ public class Track {
             } else if (nextProjectedWayThrough > 1-projectedWayThrough) {
                 // Next is better angle to travel along:
                 double spotTrimmed = trim(nextProjectedWayThrough, 0, 1);
-                _magnet.updatePosition(indexB, spotTrimmed);
+                _magnet.setPosition(indexB, spotTrimmed);
                 if (spotTrimmed == nextProjectedWayThrough) {
                     return; // magnet is now at its final resting place.
                 }
             } else {
                 // Current is better angle to travel along:
                 double spotTrimmed = trim(projectedWayThrough, 0, 1);
-                _magnet.updatePosition(indexA, spotTrimmed);
+                _magnet.setPosition(indexA, spotTrimmed);
                 if (spotTrimmed == projectedWayThrough) {
                     return; // magnet is now at its final resting place.
                 }
@@ -102,17 +103,17 @@ public class Track {
         } else {
             // Somewhere in between, check current:
             double spotTrimmed = trim(projectedWayThrough, 0, 1);
-            _magnet.updatePosition(indexA, spotTrimmed);
+            _magnet.setPosition(indexA, spotTrimmed);
             if (spotTrimmed == projectedWayThrough) {
                 return; // magnet is now at its final resting place.
             }
         }
 
         // Hasn't finished, keep moving magnet:
-        updateMagnetPosition();
+        updateMagnetPosition(num+1);
     }
 
-    private double getProjectedWayThrough(DoublePoint A, DoublePoint B, DoublePoint C) {
+    private double getProjectedWayThrough(DPoint A, DPoint B, DPoint C) {
         double dx = B.getX()-A.getX();
         double dy = B.getY()-A.getY();
         double dist = A.dist(B);
@@ -120,16 +121,14 @@ public class Track {
     }
 
     private double trim(double value, double min, double max) {
-        if (value < min) return min;
-        if (value > max) return max;
-        return value;
+        return Math.min(Math.max(min, value), max);
     }
 
-    public DoublePoint getCarPos() {
+    public DPoint getCarPos() {
         return _car.getPosition();
     }
 
-    public DoublePoint getMagnetPos() {
+    public DPoint getMagnetPos() {
         return _magnet.getPosition();
     }
 }

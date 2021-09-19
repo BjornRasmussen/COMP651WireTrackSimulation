@@ -22,15 +22,15 @@ public class GliderPosition {
         return _wayThrough;
     }
 
-    public DoublePoint getPosition() {
-        List<DoublePoint> points = _track.getPoints();
-        DoublePoint startPoint = points.get(_segmentIndex);
-        DoublePoint endPoint = points.get((getSegmentIndex()+1)%points.size());
-        return new DoublePoint(getWayThrough()*endPoint.getX() + (1-getWayThrough())*startPoint.getX(),
+    public DPoint getPosition() {
+        List<DPoint> points = _track.getPoints();
+        DPoint startPoint = points.get(_segmentIndex);
+        DPoint endPoint = points.get((getSegmentIndex()+1)%points.size());
+        return new DPoint(getWayThrough()*endPoint.getX() + (1-getWayThrough())*startPoint.getX(),
                 getWayThrough()*endPoint.getY() + (1-getWayThrough())*startPoint.getY());
     }
 
-    public void updatePosition(int segmentIndex, double wayThrough) {
+    public void setPosition(int segmentIndex, double wayThrough) {
         _segmentIndex = segmentIndex;
         _wayThrough = wayThrough;
     }
