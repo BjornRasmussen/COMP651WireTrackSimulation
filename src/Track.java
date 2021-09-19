@@ -30,10 +30,10 @@ public class Track {
         DPoint B = _points.get(indexB);
         DPoint C = _points.get(indexC);
 
-        if (_car.getWayThrough() < 0.01/A.dist(B) && dist < 0) {
+        if (_car.getWayThrough() < 0.0001/A.dist(B) && dist < 0) {
             // Car is at start node and will be moving backwards to other line segment:
             _car.setPosition(indexZ, trim(1+(dist/Z.dist(A)), 0, 1));
-        } else if (_car.getWayThrough() > (1-0.01/A.dist(B)) && dist > 0) {
+        } else if (_car.getWayThrough() > 1-(0.0001/A.dist(B)) && dist > 0) {
             // Car is at end node and will be moving forwards to next line segment:
             _car.setPosition(indexB, trim(dist/B.dist(C), 0, 1));
         } else {
@@ -45,7 +45,7 @@ public class Track {
     }
 
     private void updateMagnetPosition(int num) {
-        if (num > 3) return; // REMOVE THIS LINE TO MAKE THE MAGNET INFINITELY FAST
+        if (num > 6) return; // REMOVE THIS LINE TO MAKE THE MAGNET INFINITELY FAST
         DPoint car = _car.getPosition();
 
         int indexZ = (_magnet.getSegmentIndex()+_points.size()-1)%_points.size();
@@ -62,11 +62,11 @@ public class Track {
         double projectedWayThrough = getProjectedWayThrough(A, B, car);
         double nextProjectedWayThrough = getProjectedWayThrough(B, C, car);
 
-        if (_magnet.getWayThrough() < 0.01) {
+        if (_magnet.getWayThrough() < 0.0001/A.dist(B)) {
             // On first point, check prev and current:
             if (prevProjectedWayThrough >= 1 && projectedWayThrough <= 0) {
                 return; // magnet is in optimal position already.
-            } else if (1-prevProjectedWayThrough > projectedWayThrough) {
+            } else if ((1-prevProjectedWayThrough)*(Z.dist(A)) > projectedWayThrough*(A.dist(B))) {
                 // Prev is better angle to travel along:
                 double spotTrimmed = trim(prevProjectedWayThrough, 0, 1);
                 _magnet.setPosition(indexZ, spotTrimmed);
@@ -81,11 +81,11 @@ public class Track {
                     return; // magnet is now at its final resting place.
                 }
             }
-        } else if (_magnet.getWayThrough() > 0.99) {
+        } else if (_magnet.getWayThrough() > 1-(0.0001/A.dist(B))) {
             // On last point, check current and next:
             if (nextProjectedWayThrough <= 0 && projectedWayThrough >= 1) {
                 return; // magnet is in optimal position already.
-            } else if (nextProjectedWayThrough > 1-projectedWayThrough) {
+            } else if (nextProjectedWayThrough*B.dist(C) > A.dist(B)*(1-projectedWayThrough)) {
                 // Next is better angle to travel along:
                 double spotTrimmed = trim(nextProjectedWayThrough, 0, 1);
                 _magnet.setPosition(indexB, spotTrimmed);

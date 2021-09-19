@@ -45,8 +45,8 @@ public class GraphicsPanel extends JPanel {
             }
         });
 
-        new Timer(10, e -> {
-            _t.moveCar(0.04);
+        new Timer(17, e -> {
+            _t.moveCar(0.1);
             repaint();
         }).start();
     }
@@ -100,6 +100,9 @@ public class GraphicsPanel extends JPanel {
 //        double dir = dp.ang(p);
 //        p = dp.goInDirection(dir, r*r/dist);
 //        // END DUAL RENDERING CODE
+//        int x = (int) ((3.4+p.getX())*2000 + 400.5);
+//        int y = (int) ((1.25+p.getY())*-2000 + 400.5);
+
         int x = (int) (p.getX()*50 + 400.5);
         int y = (int) (p.getY()*-50 + 400.5);
         return new Point(x, y);
