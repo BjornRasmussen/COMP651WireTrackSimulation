@@ -19,6 +19,7 @@ public class Track {
 
     public void moveCar(double dist /* can be negative */) {
         if (dist == 0) return;
+        DPoint startCarPos = _car.getPosition();
 
         int indexZ = (_car.getSegmentIndex()-1+_points.size())%_points.size();
         int indexA = _car.getSegmentIndex();
@@ -42,6 +43,12 @@ public class Track {
         }
 
         updateMagnetPosition(0);
+
+        double distTravelled = _car.getPosition().dist(startCarPos);
+        if (dist < 0) distTravelled = -distTravelled;
+        if (Math.abs(dist-distTravelled) > 0.0001) {
+            moveCar(dist-distTravelled);
+        }
     }
 
     private void updateMagnetPosition(int num) {
