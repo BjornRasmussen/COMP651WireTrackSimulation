@@ -24,7 +24,10 @@ public class Track {
     }
 
     public void moveCar(double dist /* can be negative */) {
-        if (dist == 0) return;
+        if (dist == 0) {
+            updateMagnetPosition(0);
+            return;
+        }
         DPoint startCarPos = _car.getPosition();
 
         int indexZ = (_car.getSegmentIndex()-1+_points.size())%_points.size();
@@ -58,7 +61,7 @@ public class Track {
     }
 
     private void updateMagnetPosition(int num) {
-        if (num > 6) return; // REMOVE THIS LINE TO MAKE THE MAGNET INFINITELY FAST
+        if (num > 8) return; // REMOVE THIS LINE TO MAKE THE MAGNET INFINITELY FAST
         DPoint car = _car.getPosition();
 
         int indexZ = (_magnet.getSegmentIndex()+_points.size()-1)%_points.size();

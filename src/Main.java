@@ -19,7 +19,7 @@ public class Main {
 //        }
         for (int i = 0; i < 1000; i++) {
             double ang = i*Math.PI/500;
-            double dist = 5+Math.cos(ang*15);
+            double dist = 5+0.5*Math.cos(ang*16)-0.3*Math.sin(ang*21)+0.3*Math.cos(ang*13+Math.PI/4.3);
             points.add(new DPoint(dist*Math.sin(ang), dist*Math.cos(ang)));
         }
         GliderPosition magnet = new GliderPosition(0, 0.5);

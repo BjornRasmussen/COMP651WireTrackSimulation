@@ -4,6 +4,7 @@ import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
+import java.awt.geom.Line2D;
 
 public class GraphicsPanel extends JPanel {
     Point red;
@@ -94,7 +95,7 @@ public class GraphicsPanel extends JPanel {
         g.setColor(new Color(40, 170, 242));
         int[] xArray = new int[_t.getPoints().size()+1];
         int[] yArray = new int[_t.getPoints().size()+1];
-
+        Line2D l = new Line2D.Double();
         for (int i = 0; i < _t.getPoints().size(); i++) {
             Point A = convertCoords(_t.getPoints().get(i));
             xArray[i] = A.x;
@@ -102,6 +103,7 @@ public class GraphicsPanel extends JPanel {
         }
         xArray[xArray.length-1] = xArray[0];
         yArray[yArray.length-1] = yArray[0];
+
         g.drawPolyline(xArray, yArray, xArray.length);
         g.setStroke(new BasicStroke(25, BasicStroke.CAP_ROUND, BasicStroke.JOIN_ROUND, 10));
         g.setColor(Color.RED);
